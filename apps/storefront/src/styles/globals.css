@@ -2,42 +2,106 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/*
+ * Garb design system
+ * White gallery canvas, ink type, paper-grey utility surfaces, quiet-grey metadata.
+ * Green is reserved for live availability (the "open now" signal) only.
+ */
+:root {
+  --canvas: #ffffff;
+  --ink: #000000;
+  --paper: #f6f6f6;
+  --quiet: #878787;
+  --line: #e8e8e8;
+  --signal: #189e48;
+
+  /* Map the Medusa UI preset onto the Garb palette so starter components match. */
+  --fg-base: #000000;
+  --fg-subtle: #5c5c5c;
+  --fg-muted: #878787;
+  --fg-interactive: #000000;
+  --fg-interactive-hover: #000000;
+  --bg-base: #ffffff;
+  --bg-subtle: #f6f6f6;
+  --bg-field: #f6f6f6;
+  --bg-field-hover: #efefef;
+  --bg-interactive: #000000;
+  --border-base: #e8e8e8;
+  --border-strong: #d4d4d4;
+  --border-interactive: #000000;
+  --button-inverted: #000000;
+  --button-inverted-hover: #1f1f1f;
+  --button-inverted-pressed: #2b2b2b;
+  --buttons-inverted: none;
+  --buttons-inverted-focus: 0 0 0 2px #fff, 0 0 0 4px #000;
+  --buttons-neutral: inset 0 0 0 1px #e8e8e8;
+  --borders-base: inset 0 0 0 1px #e8e8e8;
+  --borders-interactive-with-active: 0 0 0 1px #000;
+  --borders-interactive-with-focus: 0 0 0 1px #000, 0 0 0 3px rgba(0, 0, 0, 0.12);
+  --borders-interactive-with-shadow: 0 0 0 1px #000;
+  --elevation-card-rest: none;
+  --elevation-card-hover: none;
+  --elevation-flyout: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --elevation-modal: 0 24px 48px rgba(0, 0, 0, 0.12);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-body text-ink;
+    font-feature-settings: "ss01", "ss02";
+  }
+
+  .font-serif {
+    font-variant-numeric: lining-nums;
+  }
+
+  ::selection {
+    background: #000;
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
 @layer utilities {
-  /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
-  .no-scrollbar::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  input:focus ~ label,
-  input:not(:placeholder-shown) ~ label {
-    @apply -translate-y-2 text-xsmall-regular;
-  }
-
-  input:focus ~ label {
-    @apply left-0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   textarea:-webkit-autofill,
-  textarea:-webkit-autofill:hover,
-  textarea:-webkit-autofill:focus,
-  select:-webkit-autofill,
-  select:-webkit-autofill:hover,
-  select:-webkit-autofill:focus {
-    border: 1px solid #212121;
-    -webkit-text-fill-color: #212121;
-    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+  select:-webkit-autofill {
+    -webkit-text-fill-color: #000;
+    -webkit-box-shadow: 0 0 0px 1000px #f6f6f6 inset;
     transition: background-color 5000s ease-in-out 0s;
   }
 
@@ -47,66 +111,128 @@
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
 }
 
 @layer components {
   .content-container {
-    @apply max-w-[1440px] w-full mx-auto px-6;
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6;
   }
 
-  .contrast-btn {
-    @apply px-4 py-2 border border-black rounded-full hover:bg-black hover:text-white transition-colors duration-200 ease-in;
+  /* Display type: always light serif. One italic phrase per headline. */
+  .display {
+    @apply font-serif font-light text-ink;
+    font-size: clamp(40px, 7.4vw, 72px);
+    line-height: 1;
+    letter-spacing: -0.055em;
+  }
+  .display-md {
+    @apply font-serif font-light text-ink;
+    font-size: clamp(36px, 5.6vw, 56px);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+  }
+  .display-sm {
+    @apply font-serif font-light text-ink;
+    font-size: clamp(30px, 4vw, 40px);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+  .display em,
+  .display-md em,
+  .display-sm em {
+    @apply font-light italic;
+    letter-spacing: -0.06em;
   }
 
-  .text-xsmall-regular {
-    @apply text-[10px] leading-4 font-normal;
+  .eyebrow {
+    @apply text-label font-medium text-ink;
+  }
+  .meta {
+    @apply text-label text-quiet;
   }
 
-  .text-small-regular {
-    @apply text-xs leading-5 font-normal;
+  /* Buttons: ink pills. */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-[60px] px-5 py-3 text-label font-medium transition-colors duration-150 disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-sm {
+    @apply rounded-[50px] px-4 py-2;
+  }
+  .btn-primary {
+    @apply bg-ink text-white hover:bg-[#262626];
+  }
+  .btn-secondary {
+    @apply bg-paper text-ink hover:bg-[#ececec];
+  }
+  .btn-outline {
+    @apply bg-transparent text-ink shadow-[inset_0_0_0_1px_#000] hover:bg-ink hover:text-white;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-ink underline-offset-4 hover:underline;
   }
 
-  .text-small-semi {
-    @apply text-xs leading-5 font-semibold;
+  .pill {
+    @apply inline-flex items-center gap-2 whitespace-nowrap rounded-pill bg-paper px-4 py-2 text-label text-ink transition-colors hover:bg-[#ececec];
+  }
+  .pill[aria-current="page"],
+  .pill[data-active="true"] {
+    @apply bg-ink text-white hover:bg-ink;
+  }
+  .tag {
+    @apply inline-flex items-center gap-2 whitespace-nowrap rounded-pill bg-paper px-3 py-1.5 text-micro text-ink;
   }
 
-  .text-base-regular {
-    @apply text-sm leading-6 font-normal;
+  /* Form fields */
+  .field-label {
+    @apply mb-2 block text-label font-medium text-ink;
+  }
+  .field {
+    @apply block w-full rounded-utility border border-transparent bg-paper px-4 py-3 text-body text-ink outline-none transition-colors placeholder:text-quiet focus:border-ink focus:bg-white aria-[invalid=true]:border-alert;
+  }
+  .field-hint {
+    @apply mt-1.5 text-micro text-quiet;
   }
 
-  .text-base-semi {
-    @apply text-sm leading-6 font-semibold;
+  .link {
+    @apply underline decoration-1 underline-offset-[3px] hover:decoration-2;
   }
 
-  .text-large-regular {
-    @apply text-base leading-6 font-normal;
+  .hairline {
+    @apply border-t border-line;
   }
 
-  .text-large-semi {
-    @apply text-base leading-6 font-semibold;
+  /* Rich text for policy pages */
+  .prose-garb {
+    @apply max-w-2xl text-body text-ink;
   }
-
-  .text-xl-regular {
-    @apply text-2xl leading-[36px] font-normal;
+  .prose-garb h2 {
+    @apply mb-3 mt-12 font-serif text-[32px] font-light leading-tight tracking-[-0.03em];
   }
-
-  .text-xl-semi {
-    @apply text-2xl leading-[36px] font-semibold;
+  .prose-garb h3 {
+    @apply mb-2 mt-8 text-body font-medium;
   }
-
-  .text-2xl-regular {
-    @apply text-[30px] leading-[48px] font-normal;
+  .prose-garb p,
+  .prose-garb ul,
+  .prose-garb ol {
+    @apply mb-4 text-pretty;
   }
-
-  .text-2xl-semi {
-    @apply text-[30px] leading-[48px] font-semibold;
+  .prose-garb ul {
+    @apply list-disc pl-5;
   }
-
-  .text-3xl-regular {
-    @apply text-[32px] leading-[44px] font-normal;
+  .prose-garb ol {
+    @apply list-decimal pl-5;
   }
-
-  .text-3xl-semi {
-    @apply text-[32px] leading-[44px] font-semibold;
+  .prose-garb li {
+    @apply mb-1.5;
+  }
+  .prose-garb a {
+    @apply link;
   }
 }

@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { listProducts } from "@lib/data/products"
-import { getRegion, listRegions } from "@lib/data/regions"
-import ProductTemplate from "@modules/products/templates"
+import { getRegion } from "@lib/data/regions"
+import ProductView from "@modules/garb/product/product-view"
+import { getProductByHandle } from "@lib/data/garb"
 import { HttpTypes } from "@medusajs/types"
 import { isVariantInStock } from "@lib/util/inventory"
 import {
@@ -10,7 +10,7 @@ import {
   getPricedVariants,
   toJsonLd,
 } from "@lib/util/product-structured-data"
-import { getSiteOrigin, listCountryCodes, STORE_NAME } from "@lib/util/site"
+import { getSiteOrigin } from "@lib/util/site"
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
@@ -28,35 +28,26 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound()
   }
 
-  const product = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle },
-  }).then(({ response }) => response.products[0])
+  const product = await getProductByHandle(handle)
 
   if (!product) {
     notFound()
   }
 
-  const [origin, regions] = await Promise.all([getSiteOrigin(), listRegions()])
+  const origin = await getSiteOrigin()
   const path = `/products/${product.handle}`
-  const productUrl = `${origin}/${params.countryCode}${path}`
+  const productUrl = `${origin}${path}`
   const description = product.description || product.title
 
   return {
-    title: `${product.title} | ${STORE_NAME}`,
+    title: `${product.title}${(product.metadata as any)?.size && (product.metadata as any).size !== "O/S" ? `, size ${(product.metadata as any).size}` : ""}`,
     description,
     alternates: {
       canonical: productUrl,
-      languages: Object.fromEntries(
-        listCountryCodes(regions).map((code) => [
-          `en-${code.toUpperCase()}`,
-          `${origin}/${code}${path}`,
-        ])
-      ),
       types: { "text/markdown": `${productUrl}.md` },
     },
     openGraph: {
-      title: `${product.title} | ${STORE_NAME}`,
+      title: product.title,
       description,
       url: productUrl,
       images: product.thumbnail ? [product.thumbnail] : [],
@@ -111,10 +102,7 @@ export default async function ProductPage(props: Props) {
     notFound()
   }
 
-  const pricedProduct = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle: params.handle },
-  }).then(({ response }) => response.products[0])
+  const pricedProduct = await getProductByHandle(params.handle)
 
   if (!pricedProduct) {
     notFound()
@@ -125,7 +113,7 @@ export default async function ProductPage(props: Props) {
     product: pricedProduct,
     region,
     countryCode: params.countryCode,
-    productUrl: `${origin}/${params.countryCode}/products/${pricedProduct.handle}`,
+    productUrl: `${origin}/products/${pricedProduct.handle}`,
   })
 
   return (
@@ -135,11 +123,7 @@ export default async function ProductPage(props: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
       />
-      <ProductTemplate
-        product={pricedProduct}
-        region={region}
-        countryCode={params.countryCode}
-      />
+      <ProductView product={pricedProduct} />
     </>
   )
 }

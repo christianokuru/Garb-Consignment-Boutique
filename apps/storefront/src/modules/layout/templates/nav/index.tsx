@@ -1,68 +1,88 @@
+import { retrieveCart } from "@lib/data/cart"
+import { departments, slugify } from "@lib/garb"
+import { UserIcon } from "@modules/common/components/garb-icons"
+import Link from "next/link"
 import { Suspense } from "react"
+import MobileMenu from "../../components/garb/mobile-menu"
+import OpenStatus from "../../components/garb/open-status"
+import SearchButton from "../../components/garb/search-button"
+import Wordmark from "../../components/garb/wordmark"
 
-import { listLocales } from "@lib/data/locales"
-import { getLocale } from "@lib/data/locale-actions"
-import { listRegions } from "@lib/data/regions"
-import { StoreRegion } from "@medusajs/types"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import CartButton from "@modules/layout/components/cart-button"
-import Search from "@modules/layout/components/search"
-import SideMenu from "@modules/layout/components/side-menu"
+async function BagCount() {
+  const cart = await retrieveCart().catch(() => null)
+  const count = cart?.items?.reduce((n, i) => n + i.quantity, 0) ?? 0
+  return <>{count}</>
+}
 
-export default async function Nav() {
-  const [regions, locales, currentLocale] = await Promise.all([
-    listRegions().then((regions: StoreRegion[]) => regions),
-    listLocales(),
-    getLocale(),
-  ])
-
+function BagButton() {
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group">
-      <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
-        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center">
-            <div className="h-full">
-              <SideMenu regions={regions} locales={locales} currentLocale={currentLocale} />
-            </div>
-          </div>
+    <Link href="/cart" className="btn btn-primary btn-sm" data-testid="nav-cart-link">
+      Bag
+      <span className="tabular-nums" aria-label="items">
+        <Suspense fallback="0">
+          <BagCount />
+        </Suspense>
+      </span>
+    </Link>
+  )
+}
 
-          <div className="flex items-center h-full">
-            <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
-              data-testid="nav-store-link"
-            >
-              Medusa Store
-            </LocalizedClientLink>
-          </div>
+function DepartmentMenu({ department }: { department: keyof typeof departments }) {
+  const d = departments[department]
+  return (
+    <div className="group relative">
+      <Link href={`/${department}`} className="pill" aria-haspopup="true">
+        {d.label}
+      </Link>
+      <div className="invisible absolute left-0 top-full z-50 pt-2 opacity-0 transition-opacity duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+        <div className="w-[420px] rounded-utility bg-white p-5 shadow-[0_16px_40px_rgba(0,0,0,0.08)] ring-1 ring-line">
+          <p className="meta mb-3">Shop {d.label.toLowerCase()}</p>
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+            <li><Link href={`/${department}`} className="text-label hover:underline">Everything</Link></li>
+            {d.categories.map((c) => (
+              <li key={c}>
+                <Link href={`/${department}/${slugify(c)}`} className="text-label hover:underline">{c}</Link>
+              </li>
+            ))}
+            <li><Link href={`/sale?department=${department}`} className="text-label italic hover:underline">Sale</Link></li>
+            <li><Link href={`/designers?department=${department}`} className="text-label hover:underline">Designers A–Z</Link></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
-            <Search />
-            <div className="hidden small:flex items-center gap-x-6 h-full">
-              <LocalizedClientLink
-                className="hover:text-ui-fg-base"
-                href="/account"
-                data-testid="nav-account-link"
-              >
-                Account
-              </LocalizedClientLink>
-            </div>
-            <Suspense
-              fallback={
-                <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex gap-2"
-                  href="/cart"
-                  data-testid="nav-cart-link"
-                >
-                  Cart (0)
-                </LocalizedClientLink>
-              }
-            >
-              <CartButton />
-            </Suspense>
+export default function Nav() {
+  return (
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
+      <div className="mx-auto grid h-[72px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6 lg:h-[92px]">
+        <nav className="flex items-center gap-2" aria-label="Primary">
+          <div className="lg:hidden">
+            <MobileMenu />
+          </div>
+          <div className="hidden items-center gap-2 lg:flex">
+            <DepartmentMenu department="women" />
+            <DepartmentMenu department="men" />
+            <Link href="/designers" className="pill">Designers</Link>
+            <Link href="/sale" className="pill">Sale</Link>
+            <Link href="/consign" className="pill">Consign</Link>
           </div>
         </nav>
-      </header>
-    </div>
+        <Wordmark />
+        <div className="flex items-center justify-end gap-1 sm:gap-2">
+          <Link href="/visit" className="mr-2 hidden xl:block">
+            <OpenStatus />
+          </Link>
+          <div className="hidden sm:block">
+            <SearchButton />
+          </div>
+          <Link href="/account" className="hidden h-10 w-10 items-center justify-center rounded-pill hover:bg-paper sm:inline-flex" aria-label="Account">
+            <UserIcon />
+          </Link>
+          <BagButton />
+        </div>
+      </div>
+    </header>
   )
 }

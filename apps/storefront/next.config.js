@@ -8,6 +8,12 @@ checkEnvVariables()
 const S3_HOSTNAME = process.env.MEDUSA_CLOUD_S3_HOSTNAME
 const S3_PATHNAME = process.env.MEDUSA_CLOUD_S3_PATHNAME
 
+const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
+  ? new URL(process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL)
+  : null
+const BACKEND_HOST = backendUrl?.hostname
+const BACKEND_PROTOCOL = backendUrl?.protocol.replace(":", "")
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -49,12 +55,26 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [360, 480, 640, 828, 1080, 1280, 1600, 1920],
+    imageSizes: [64, 128, 200, 256, 320, 400],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+    // Next 16 blocks optimising images from private IPs; allow it only when the
+    // backend runs on this machine during development.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
     remotePatterns: [
       {
         protocol: "http",
         hostname: "localhost",
       },
+      ...(BACKEND_HOST
+        ? [
+            {
+              protocol: BACKEND_PROTOCOL,
+              hostname: BACKEND_HOST,
+            },
+          ]
+        : []),
       {
         protocol: "https",
         hostname: "*.s3.*.amazonaws.com",

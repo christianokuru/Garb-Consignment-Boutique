@@ -23,6 +23,13 @@ const PRODUCT_GRAPH_FIELDS = [
   "tags.value",
   "options.title",
   "options.values.value",
+  "metadata",
+  "images.url",
+  "images.rank",
+  "categories.handle",
+  "categories.parent_category.handle",
+  "designer.name",
+  "designer.handle",
 ];
 
 type ProductRow = {
@@ -35,9 +42,16 @@ type ProductRow = {
   created_at?: string | Date | null;
   deleted_at?: string | Date | null;
   sales_channels?: ({ id?: string | null } | null)[] | null;
-  categories?: ({ name?: string | null } | null)[] | null;
+  categories?: ({
+    name?: string | null;
+    handle?: string | null;
+    parent_category?: { handle?: string | null } | null;
+  } | null)[] | null;
   tags?: ({ value?: string | null } | null)[] | null;
   options?: ProductOptionRow[] | null;
+  metadata?: Record<string, unknown> | null;
+  images?: ({ url?: string | null; rank?: number | null } | null)[] | null;
+  designer?: { name?: string | null; handle?: string | null } | null;
 };
 
 const productFields = search.define({
@@ -60,6 +74,20 @@ const productFields = search.define({
     .filterable()
     .facetable()
     .retrievable(),
+  // Garb fields: designer, department, size and the details a listing card shows.
+  designer: search.keyword().filterable().facetable().retrievable(),
+  designer_name: search.text().searchable({ weight: 3 }),
+  designer_handle: search.keyword().filterable().retrievable(),
+  gender: search.keyword().filterable().facetable().retrievable(),
+  category_handles: search.keyword().array().filterable().retrievable(),
+  size: search.keyword().filterable().facetable().retrievable(),
+  item_type: search.text().searchable({ weight: 2 }).retrievable(),
+  item_code: search.keyword().filterable().retrievable(),
+  // Garb item codes increase over time, so this sorts newest first.
+  item_number: search.float().sortable().retrievable(),
+  condition: search.keyword().retrievable(),
+  colour: search.text().searchable({ weight: 1 }).retrievable(),
+  hover_image: search.keyword().retrievable(),
   ...priceFields,
 });
 
@@ -93,8 +121,34 @@ function toDocument(
     category,
     labels,
     option_values: toOptionValues(product.options),
+    ...garbFields(product),
     ...toProductPricing(pricing),
   };
+}
+
+function garbFields(product: ProductRow) {
+  const metadata = (product.metadata ?? {}) as Record<string, unknown>
+  const text = (value: unknown) => (typeof value === "string" && value.trim() ? value.trim() : null)
+  const images = (product.images ?? [])
+    .filter((image): image is { url: string; rank?: number | null } => Boolean(image?.url))
+    .sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
+  const handles = (product.categories ?? []).flatMap((c) =>
+    [c?.handle, c?.parent_category?.handle].filter((h): h is string => Boolean(h))
+  )
+  return {
+    designer: text(product.designer?.name),
+    designer_name: text(product.designer?.name),
+    designer_handle: text(product.designer?.handle),
+    gender: text(metadata.gender),
+    category_handles: Array.from(new Set(handles)),
+    size: text(metadata.size),
+    item_type: text(metadata.item_type),
+    item_code: text(metadata.item_code),
+    item_number: Number(metadata.item_code) || 0,
+    condition: text(metadata.condition),
+    colour: text(metadata.colour),
+    hover_image: images[1]?.url ?? null,
+  }
 }
 
 /**

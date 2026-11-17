@@ -1,12 +1,10 @@
-"use client"
-
 import Link from "next/link"
-import { useParams } from "next/navigation"
 import React from "react"
 
 /**
- * Use this component to create a Next.js `<Link />` that persists the current country code in the url,
- * without having to explicitly pass it as a prop.
+ * Garb sells in one country, so URLs carry no country prefix (the middleware
+ * maps them to the Canada region). Kept as a thin wrapper so starter code
+ * that imports it keeps working.
  */
 const LocalizedClientLink = ({
   children,
@@ -20,10 +18,8 @@ const LocalizedClientLink = ({
   passHref?: true
   [x: string]: unknown
 }) => {
-  const { countryCode } = useParams()
-
   return (
-    <Link href={`/${countryCode}${href}`} {...props}>
+    <Link href={href} {...props}>
       {children}
     </Link>
   )

@@ -20,6 +20,14 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
+        // Garb design tokens (gallery-white editorial system)
+        canvas: "#ffffff",
+        ink: "#000000",
+        paper: "#f6f6f6",
+        quiet: "#878787",
+        line: "#e8e8e8",
+        signal: "#189e48",
+        alert: "#c4320a",
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",
@@ -33,14 +41,6 @@ module.exports = {
           80: "#1F2937",
           90: "#111827",
         },
-      },
-      borderRadius: {
-        none: "0px",
-        soft: "2px",
-        base: "4px",
-        rounded: "8px",
-        large: "16px",
-        circle: "9999px",
       },
       maxWidth: {
         "8xl": "100rem",
@@ -56,10 +56,35 @@ module.exports = {
       },
       fontSize: {
         "3xl": "2rem",
+        micro: ["12px", { lineHeight: "1.2" }],
+        label: ["14px", { lineHeight: "1.4" }],
+        body: ["16px", { lineHeight: "1.5" }],
+        lede: ["20px", { lineHeight: "1.45", letterSpacing: "-0.2px" }],
+        "sans-xl": ["26px", { lineHeight: "1.2", letterSpacing: "-0.52px" }],
+        "display-sm": ["40px", { lineHeight: "1.05", letterSpacing: "-1.6px" }],
+        "display-md": ["56px", { lineHeight: "1.05", letterSpacing: "-3.36px" }],
+        "display-lg": ["72px", { lineHeight: "1", letterSpacing: "-4.32px" }],
+        "display-xl": ["104px", { lineHeight: "0.95", letterSpacing: "-6px" }],
+      },
+      borderRadius: {
+        none: "0px",
+        soft: "2px",
+        base: "4px",
+        rounded: "8px",
+        image: "12px",
+        utility: "20px",
+        large: "16px",
+        pill: "9999px",
+        circle: "9999px",
+      },
+      spacing: {
+        gutter: "16px",
       },
       fontFamily: {
+        serif: ["var(--font-serif)", "Cormorant Garamond", "Georgia", "serif"],
         sans: [
-          "Inter",
+          "var(--font-sans)",
+          "DM Sans",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",

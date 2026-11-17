@@ -1,72 +1,36 @@
+import ShopTemplate from "@modules/garb/shop/shop-template"
 import { Metadata } from "next"
-import { notFound } from "next/navigation"
 
-import { listProducts } from "@lib/data/products"
-import { getRegion } from "@lib/data/regions"
-import ProductPreview from "@modules/products/components/product-preview"
-import SearchForm from "@modules/search/components/search-form"
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> }
 
-const RESULT_LIMIT = 24
+export const metadata: Metadata = { title: "Search", robots: { index: false } }
 
-type Props = {
-  params: Promise<{ countryCode: string }>
-  searchParams: Promise<{ q?: string | string[] }>
-}
-
-const getQuery = (q?: string | string[]) =>
-  (Array.isArray(q) ? q[0] : q)?.trim().slice(0, 200) ?? ""
-
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const query = getQuery((await props.searchParams).q)
-  return {
-    title: query ? `Search results for "${query}"` : "Search",
-    robots: { index: false, follow: true },
-  }
-}
-
-export default async function SearchPage(props: Props) {
-  const { countryCode } = await props.params
-  const query = getQuery((await props.searchParams).q)
-
-  const region = await getRegion(countryCode)
-  if (!region) {
-    notFound()
-  }
-
-  const { response } = query
-    ? await listProducts({
-        countryCode,
-        queryParams: { q: query, limit: RESULT_LIMIT },
-      })
-    : { response: { products: [], count: 0 } }
-
+export default async function SearchPage({ searchParams }: Props) {
+  const sp = await searchParams
+  const q = typeof sp.q === "string" ? sp.q.slice(0, 100) : ""
   return (
-    <div className="content-container py-6" data-testid="search-container">
-      <h1 className="text-2xl-semi mb-6">
-        {query ? `Search results for "${query}"` : "Search"}
-      </h1>
-      <SearchForm countryCode={countryCode} defaultValue={query} className="mb-8 max-w-xl" />
-      {query && (
-        <p className="text-small-regular text-ui-fg-subtle mb-6">
-          {response.count} {response.count === 1 ? "product" : "products"} found
-        </p>
-      )}
-      {query && response.products.length === 0 ? (
-        <p className="text-ui-fg-subtle">
-          No products match your search. Try a different keyword.
-        </p>
+    <>
+      <div className="content-container pt-8 sm:pt-12">
+        <form action="/search" className="flex max-w-2xl items-center gap-2 rounded-pill bg-paper p-1.5 pl-5" role="search">
+          <label htmlFor="q" className="sr-only">Search</label>
+          <input id="q" name="q" defaultValue={q} placeholder="Designer, piece or item code" className="w-full bg-transparent text-body outline-none placeholder:text-quiet" type="search" />
+          <button className="btn btn-primary btn-sm" type="submit">Search</button>
+        </form>
+      </div>
+      {q ? (
+        <ShopTemplate
+          eyebrow="Search"
+          title={<>“{q}”</>}
+          base={{ q }}
+          searchParams={sp}
+          path={`/search`}
+        />
       ) : (
-        <ul
-          className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
-          data-testid="search-results"
-        >
-          {response.products.map((product) => (
-            <li key={product.id}>
-              <ProductPreview product={product} region={region} />
-            </li>
-          ))}
-        </ul>
+        <div className="content-container pb-24 pt-12">
+          <h1 className="display">What are you <em>looking</em> for?</h1>
+          <p className="mt-4 text-body text-[#3d3d3d]">Search by designer, type of piece, colour or the six-digit item code.</p>
+        </div>
       )}
-    </div>
+    </>
   )
 }
