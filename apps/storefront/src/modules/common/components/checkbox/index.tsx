@@ -19,7 +19,7 @@ const CheckboxWithLabel: React.FC<CheckboxProps> = ({
   return (
     <div className="flex items-center space-x-2 ">
       <Checkbox
-        className="text-base-regular flex items-center gap-x-2"
+        className="h-4 w-4 accent-black"
         id="checkbox"
         role="checkbox"
         checked={checked}
@@ -31,7 +31,7 @@ const CheckboxWithLabel: React.FC<CheckboxProps> = ({
       />
       <Label
         htmlFor="checkbox"
-        className="!transform-none !txt-medium"
+        className="!transform-none text-label font-normal"
       >
         {label}
       </Label>

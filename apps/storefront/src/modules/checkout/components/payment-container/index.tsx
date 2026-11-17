@@ -4,11 +4,10 @@ import React, { useContext } from "react"
 
 import Radio from "@modules/common/components/radio"
 
-import { getPaymentInfo, isManual } from "@lib/constants"
+import { getPaymentInfo, paymentDescriptions } from "@lib/constants"
 import { getPaymentErrorMessage } from "@lib/util/payment-error"
 import SkeletonCardDetails from "@modules/skeletons/components/skeleton-card-details"
 import { PaymentElement } from "@stripe/react-stripe-js"
-import PaymentTest from "../payment-test"
 import { StripeContext } from "../payment-wrapper/stripe-wrapper"
 
 type PaymentContainerProps = {
@@ -24,8 +23,8 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
   disabled = false,
   children,
 }) => {
-  const isDevelopment = process.env.NODE_ENV === "development"
   const paymentInfo = getPaymentInfo(paymentProviderId)
+  const description = paymentDescriptions[paymentProviderId]
 
   return (
     <RadioGroupOption
@@ -33,30 +32,24 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
       value={paymentProviderId}
       disabled={disabled}
       className={clx(
-        "flex flex-col gap-y-2 text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
-        {
-          "border-ui-border-interactive":
-            selectedPaymentOptionId === paymentProviderId,
-        }
+        "mb-2 flex cursor-pointer flex-col gap-y-2 rounded-[14px] border bg-white px-5 py-4 transition-colors",
+        selectedPaymentOptionId === paymentProviderId ? "border-ink" : "border-line hover:border-[#bdbdbd]"
       )}
     >
       <div className="flex items-center justify-between ">
         <div className="flex items-center gap-x-4">
           <Radio checked={selectedPaymentOptionId === paymentProviderId} />
-          <Text className="text-base-regular">
-            {paymentInfo?.title || paymentProviderId}
-          </Text>
-          {isManual(paymentProviderId) && isDevelopment && (
-            <PaymentTest className="hidden small:block" />
-          )}
+          <div>
+            <Text className="text-body font-medium">
+              {paymentInfo?.title || paymentProviderId}
+            </Text>
+            {description && <Text className="mt-0.5 text-label text-quiet">{description}</Text>}
+          </div>
         </div>
-        <span className="justify-self-end text-ui-fg-base">
+        <span className="justify-self-end text-ink">
           {paymentInfo?.icon}
         </span>
       </div>
-      {isManual(paymentProviderId) && isDevelopment && (
-        <PaymentTest className="small:hidden text-[10px]" />
-      )}
       {children}
     </RadioGroupOption>
   )

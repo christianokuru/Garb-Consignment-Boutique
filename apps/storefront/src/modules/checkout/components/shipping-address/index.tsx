@@ -1,3 +1,4 @@
+import ProvinceSelect from "@modules/garb/forms/province-select"
 import { HttpTypes } from "@medusajs/types"
 import { Container } from "@modules/common/components/ui"
 import Checkbox from "@modules/common/components/checkbox"
@@ -175,8 +176,8 @@ const ShippingAddress = ({
           required
           data-testid="shipping-country-select"
         />
-        <Input
-          label="State / Province"
+        <ProvinceSelect
+          required
           name="shipping_address.province"
           autoComplete="address-level1"
           value={formData["shipping_address.province"]}

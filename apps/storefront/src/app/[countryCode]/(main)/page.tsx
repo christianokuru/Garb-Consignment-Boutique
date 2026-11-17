@@ -105,10 +105,10 @@ export default async function Home() {
 
       {/* Departments */}
       <section className="content-container grid gap-4 sm:grid-cols-2 sm:gap-6">
-        {[
+        {([
           ["women", "Women", womenImage, "Coats, dresses, bags, shoes and jewelry."],
           ["men", "Men", menImage, "Suiting, outerwear, knitwear and shoes."],
-        ].map(([href, label, img, copy]) => (
+        ] as [string, string, string | null | undefined, string][]).map(([href, label, img, copy]) => (
           <Link key={href} href={`/${href}`} className="group block">
             <div className="relative aspect-[4/5] overflow-hidden bg-paper sm:aspect-[3/4]">
               {img && (

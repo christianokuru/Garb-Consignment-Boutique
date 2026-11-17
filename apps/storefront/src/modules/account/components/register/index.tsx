@@ -17,19 +17,16 @@ const Register = ({ setCurrentView }: Props) => {
 
   return (
     <div
-      className="max-w-sm flex flex-col items-center"
+      className="flex w-full max-w-md flex-col"
       data-testid="register-page"
     >
-      <h1 className="text-large-semi uppercase mb-6">
-        Become a Medusa Store Member
-      </h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Create your Medusa Store Member profile, and get access to an enhanced
-        shopping experience.
+      <h2 className="display-sm mb-2">Create an <em>account</em></h2>
+      <p className="mb-6 text-body text-[#3d3d3d]">
+        Save your details, follow your orders, and check out faster next time.
       </p>
       {message?.state === "verification_required" && (
         <div
-          className="w-full mb-4 text-center text-base-regular text-ui-fg-base bg-ui-bg-subtle border border-ui-border-base rounded-rounded p-4"
+          className="w-full mb-4 text-center text-base-regular text-ui-fg-base bg-ui-bg-subtle border border-ui-border-base rounded-[14px] p-4"
           data-testid="register-verification-message"
         >
           We sent a verification link to <strong>{message.email}</strong>.
@@ -80,17 +77,17 @@ const Register = ({ setCurrentView }: Props) => {
           error={message?.state === "error" ? message.error : null}
           data-testid="register-error"
         />
-        <span className="text-center text-ui-fg-base text-small-regular mt-6">
-          By creating an account, you agree to Medusa Store&apos;s{" "}
+        <span className="mt-6 text-label text-[#3d3d3d]">
+          By creating an account, you agree to Garb&apos;s{" "}
           <LocalizedClientLink
-            href="/content/privacy-policy"
+            href="/privacy"
             className="underline"
           >
             Privacy Policy
           </LocalizedClientLink>{" "}
           and{" "}
           <LocalizedClientLink
-            href="/content/terms-of-use"
+            href="/terms"
             className="underline"
           >
             Terms of Use
@@ -101,7 +98,7 @@ const Register = ({ setCurrentView }: Props) => {
           Join
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
+      <span className="mt-6 text-label text-[#3d3d3d]">
         Already a member?{" "}
         <button
           onClick={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}

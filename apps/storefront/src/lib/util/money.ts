@@ -13,8 +13,9 @@ export const convertToLocale = ({
   currency_code,
   minimumFractionDigits,
   maximumFractionDigits,
-  locale = "en-US",
+  locale = "en-CA",
 }: ConvertToLocaleParams) => {
+  // Garb sells in CAD only, so show "$1,250.00" rather than "CA$1,250.00".
   return currency_code && !isEmpty(currency_code)
     ? new Intl.NumberFormat(locale, {
         style: "currency",

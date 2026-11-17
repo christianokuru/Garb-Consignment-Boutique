@@ -130,7 +130,7 @@ const Payment = ({
           <Text>
             <button
               onClick={handleEdit}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+              className="text-label underline underline-offset-4"
               data-testid="edit-payment-button"
             >
               Edit

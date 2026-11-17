@@ -14,16 +14,16 @@ const Login = ({ setCurrentView }: Props) => {
 
   return (
     <div
-      className="max-w-sm w-full flex flex-col items-center"
+      className="flex w-full max-w-md flex-col"
       data-testid="login-page"
     >
-      <h1 className="text-large-semi uppercase mb-6">Welcome back</h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-8">
-        Sign in to access an enhanced shopping experience.
+      <h2 className="display-sm mb-2">Welcome <em>back</em></h2>
+      <p className="mb-8 text-body text-[#3d3d3d]">
+        Sign in to see your orders and check out faster.
       </p>
       {message?.state === "verification_required" && (
         <div
-          className="w-full mb-6 text-center text-base-regular text-ui-fg-base bg-ui-bg-subtle border border-ui-border-base rounded-rounded p-4"
+          className="w-full mb-6 text-center text-base-regular text-ui-fg-base bg-ui-bg-subtle border border-ui-border-base rounded-[14px] p-4"
           data-testid="login-verification-message"
         >
           We sent a verification link to <strong>{message.email}</strong>.
@@ -58,17 +58,19 @@ const Login = ({ setCurrentView }: Props) => {
           Sign in
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
-        Not a member?{" "}
-        <button
-          onClick={() => setCurrentView(LOGIN_VIEW.REGISTER)}
-          className="underline"
-          data-testid="register-button"
-        >
-          Join us
-        </button>
-        .
-      </span>
+      <div className="mt-6 flex flex-wrap justify-between gap-3 text-label">
+        <a href="/forgot-password" className="link">Forgot your password?</a>
+        <span>
+          New here?{" "}
+          <button
+            onClick={() => setCurrentView(LOGIN_VIEW.REGISTER)}
+            className="link font-medium"
+            data-testid="register-button"
+          >
+            Create an account
+          </button>
+        </span>
+      </div>
     </div>
   )
 }

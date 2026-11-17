@@ -31,7 +31,7 @@ const SearchHit = ({ hit, onNavigate }: SearchHitProps) => {
         className="flex items-center gap-x-4 px-4 py-3 hover:bg-ui-bg-base-hover"
         data-testid="search-hit-link"
       >
-        <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-rounded bg-ui-bg-subtle">
+        <div className="relative h-16 w-14 shrink-0 overflow-hidden rounded-[14px] bg-ui-bg-subtle">
           {hit.thumbnail ? (
             <Image
               src={hit.thumbnail}

@@ -176,7 +176,7 @@ const Shipping: React.FC<ShippingProps> = ({
             <Text>
               <button
                 onClick={handleEdit}
-                className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+                className="text-label underline underline-offset-4"
                 data-testid="edit-delivery-button"
               >
                 Edit
@@ -192,7 +192,7 @@ const Shipping: React.FC<ShippingProps> = ({
                 Shipping method
               </span>
               <span className="mb-4 text-ui-fg-muted txt-medium">
-                How would you like you order delivered
+                Ship it to you, or pick it up at the shop for free.
               </span>
             </div>
             <div data-testid="delivery-options-container">
@@ -214,9 +214,9 @@ const Shipping: React.FC<ShippingProps> = ({
                       value={PICKUP_OPTION_ON}
                       data-testid="delivery-option-radio"
                       className={clx(
-                        "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                        "flex items-center justify-between text-small-regular cursor-pointer py-4 rounded-[14px] border border-line px-5 mb-2 hover:border-[#bdbdbd]",
                         {
-                          "border-ui-border-interactive":
+                          "!border-ink":
                             showPickupOptions === PICKUP_OPTION_ON,
                         }
                       )}
@@ -226,11 +226,12 @@ const Shipping: React.FC<ShippingProps> = ({
                           checked={showPickupOptions === PICKUP_OPTION_ON}
                         />
                         <span className="text-base-regular">
-                          Pick up your order
+                          Pick up at 1046 Queen St W
+                          <span className="block text-label text-quiet">Ready within one business day</span>
                         </span>
                       </div>
                       <span className="justify-self-end text-ui-fg-base">
-                        -
+                        Free
                       </span>
                     </Radio>
                   </RadioGroup>
@@ -256,9 +257,9 @@ const Shipping: React.FC<ShippingProps> = ({
                         data-testid="delivery-option-radio"
                         disabled={isDisabled}
                         className={clx(
-                          "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                          "flex items-center justify-between text-small-regular cursor-pointer py-4 rounded-[14px] border border-line px-5 mb-2 hover:border-[#bdbdbd]",
                           {
-                            "border-ui-border-interactive":
+                            "!border-ink":
                               option.id === shippingMethodId,
                             "hover:shadow-brders-none cursor-not-allowed":
                               isDisabled,
@@ -326,9 +327,9 @@ const Shipping: React.FC<ShippingProps> = ({
                           disabled={option.insufficient_inventory}
                           data-testid="delivery-option-radio"
                           className={clx(
-                            "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                            "flex items-center justify-between text-small-regular cursor-pointer py-4 rounded-[14px] border border-line px-5 mb-2 hover:border-[#bdbdbd]",
                             {
-                              "border-ui-border-interactive":
+                              "!border-ink":
                                 option.id === shippingMethodId,
                               "hover:shadow-brders-none cursor-not-allowed":
                                 option.insufficient_inventory,

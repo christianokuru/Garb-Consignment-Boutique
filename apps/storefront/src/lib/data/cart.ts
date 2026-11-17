@@ -419,7 +419,7 @@ export async function placeOrder(cartId?: string) {
     revalidateTag(orderCacheTag, { expire: 0 })
 
     removeCartId()
-    redirect(`/${countryCode}/order/${cartRes?.order.id}/confirmed`)
+    redirect(`/order/${cartRes?.order.id}/confirmed`)
   }
 
   return cartRes.cart

@@ -1,5 +1,7 @@
 "use client"
 
+import ProvinceSelect, { provinceName } from "@modules/garb/forms/province-select"
+
 import {
   deleteCustomerAddress,
   updateCustomerAddress,
@@ -63,7 +65,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
     <>
       <div
         className={clx(
-          "border rounded-rounded p-5 min-h-[220px] h-full w-full flex flex-col justify-between transition-colors",
+          "border rounded-[14px] p-5 min-h-[220px] h-full w-full flex flex-col justify-between transition-colors",
           {
             "border-gray-900": isActive,
           }
@@ -94,7 +96,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
               {address.postal_code}, {address.city}
             </span>
             <span data-testid="address-province-country">
-              {address.province && `${address.province}, `}
+              {address.province && `${provinceName(address.province)}, `}
               {address.country_code?.toUpperCase()}
             </span>
           </Text>
@@ -185,8 +187,8 @@ const EditAddress: React.FC<EditAddressProps> = ({
                   data-testid="city-input"
                 />
               </div>
-              <Input
-                label="Province / State"
+              <ProvinceSelect
+                required
                 name="province"
                 autoComplete="address-level1"
                 defaultValue={address.province || undefined}

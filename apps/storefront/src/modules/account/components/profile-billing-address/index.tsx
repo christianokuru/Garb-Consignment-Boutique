@@ -1,5 +1,7 @@
 "use client"
 
+import ProvinceSelect from "@modules/garb/forms/province-select"
+
 import React, { useActionState, useEffect, useMemo } from "react"
 
 import Input from "@modules/common/components/input"
@@ -161,8 +163,8 @@ const ProfileBillingAddress: React.FC<MyInformationProps> = ({
               data-testid="billing-city-input"
             />
           </div>
-          <Input
-            label="Province"
+          <ProvinceSelect
+            required
             name="province"
             defaultValue={billingAddress?.province || undefined}
             data-testid="billing-province-input"

@@ -4,13 +4,26 @@ import Ideal from "@modules/common/icons/ideal"
 import PayPal from "@modules/common/icons/paypal"
 import React from "react"
 
+const ETransferIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+    <path d="M4 7h13l-3-3M20 17H7l3 3" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+/** Extra line shown under a payment option at checkout. */
+export const paymentDescriptions: Record<string, string> = {
+  pp_system_default:
+    "Place your order, then send an e-Transfer within 72 hours. We hold your pieces until it arrives.",
+  pp_stripe_stripe: "Visa, Mastercard and American Express. Charged when you place your order.",
+}
+
 /* Map of payment provider_id to their title and icon. Add in any payment providers you want to use. */
 export const paymentInfoMap: Record<
   string,
   { title: string; icon: React.JSX.Element }
 > = {
   pp_stripe_stripe: {
-    title: "Credit card",
+    title: "Credit or debit card",
     icon: <CreditCard />,
   },
   "pp_stripe-ideal_stripe": {
@@ -26,8 +39,8 @@ export const paymentInfoMap: Record<
     icon: <PayPal />,
   },
   pp_system_default: {
-    title: "Manual Payment",
-    icon: <CreditCard />,
+    title: "Interac e-Transfer",
+    icon: <ETransferIcon />,
   },
   // Add more payment providers here
 }

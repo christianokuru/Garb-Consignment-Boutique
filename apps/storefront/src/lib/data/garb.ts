@@ -192,3 +192,43 @@ export async function getProductByHandle(handle: string): Promise<GarbProduct | 
     return null
   }
 }
+
+export type AppointmentState = { ok?: boolean; error?: string; fieldErrors?: Record<string, string> } | null
+
+export async function requestAppointment(_state: AppointmentState, formData: FormData): Promise<AppointmentState> {
+  const get = (k: string) => String(formData.get(k) ?? "").trim()
+  const fieldErrors: Record<string, string> = {}
+  const name = get("name")
+  const email = get("email")
+  const phone = get("phone")
+  const itemCount = Number(get("item_count"))
+  const type = get("appointment_type") === "in_house" ? "in_house" : "in_store"
+  if (name.length < 2) fieldErrors.name = "Please enter your name."
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fieldErrors.email = "Please enter a valid email."
+  if (phone.replace(/\D/g, "").length < 7) fieldErrors.phone = "Please enter a phone number we can reach you at."
+  if (!Number.isFinite(itemCount) || itemCount < 1) fieldErrors.item_count = "Roughly how many pieces?"
+  if (type === "in_house" && itemCount < 25) fieldErrors.item_count = "In-home visits are for 25 pieces or more."
+  if (Object.keys(fieldErrors).length) return { fieldErrors }
+
+  try {
+    await sdk.client.fetch("/store/appointments", {
+      method: "POST",
+      body: {
+        name,
+        email,
+        phone,
+        appointment_type: type,
+        item_count: itemCount,
+        categories: formData.getAll("categories").map(String).slice(0, 20),
+        brands: get("brands") || null,
+        preferred_date: get("preferred_date") || null,
+        preferred_time: get("preferred_time") || null,
+        notes: get("notes") || null,
+        company: get("company"),
+      },
+    })
+    return { ok: true }
+  } catch (e) {
+    return { error: "We couldn't send your request. Please try again, or call us." }
+  }
+}

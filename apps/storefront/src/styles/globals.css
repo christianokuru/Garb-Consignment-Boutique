@@ -59,6 +59,11 @@
     font-feature-settings: "ss01", "ss02";
   }
 
+  /* Starter components use Medusa UI text utilities; keep them in DM Sans. */
+  [class*="txt-"] {
+    font-family: var(--font-sans), "DM Sans", sans-serif !important;
+  }
+
   .font-serif {
     font-variant-numeric: lining-nums;
   }
@@ -110,6 +115,15 @@
   input[type="search"]::-webkit-search-results-button,
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
+  }
+
+  /* Floating labels used by the checkout and account forms */
+  input:focus ~ label,
+  input:not(:placeholder-shown) ~ label {
+    @apply -translate-y-2.5 text-[11px];
+  }
+  input:focus ~ label {
+    @apply left-0;
   }
 
   .text-balance {

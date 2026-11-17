@@ -5,7 +5,7 @@ type Data = { entity_id: string; token: string; actor_type: string }
 
 export default async function passwordResetHandler({ event: { data }, container }: SubscriberArgs<Data>) {
   const path =
-    data.actor_type === "consignor" ? "/seller/reset-password" : data.actor_type === "customer" ? "/account/reset-password" : null
+    data.actor_type === "consignor" ? "/seller/reset-password" : data.actor_type === "customer" ? "/reset-password" : null
   if (!path) {
     return
   }

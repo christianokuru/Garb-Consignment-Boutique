@@ -4,23 +4,24 @@ import PaymentWrapper from "@modules/checkout/components/payment-wrapper"
 import CheckoutForm from "@modules/checkout/templates/checkout-form"
 import CheckoutSummary from "@modules/checkout/templates/checkout-summary"
 import { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Checkout",
+  robots: { index: false },
 }
 
 export default async function Checkout() {
   const cart = await retrieveCart()
 
-  if (!cart) {
-    return notFound()
+  if (!cart || !cart.items?.length) {
+    redirect("/cart")
   }
 
   const customer = await retrieveCustomer()
 
   return (
-    <div className="grid grid-cols-1 small:grid-cols-[1fr_416px] content-container gap-x-40 py-12">
+    <div className="content-container grid grid-cols-1 gap-10 py-8 sm:py-12 lg:grid-cols-[1fr_420px] lg:gap-16">
       <PaymentWrapper cart={cart}>
         <CheckoutForm cart={cart} customer={customer} />
       </PaymentWrapper>

@@ -39,11 +39,15 @@ const Review = ({ cart }: { cart: HttpTypes.StoreCart }) => {
         <>
           <div className="flex items-start gap-x-1 w-full mb-6">
             <div className="w-full">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                By clicking the Place Order button, you confirm that you have
-                read, understand and accept our Terms of Use, Terms of Sale and
-                Returns Policy and acknowledge that you have read Medusa
-                Store&apos;s Privacy Policy.
+              <Text className="mb-1 max-w-xl text-label text-[#3d3d3d]">
+                All online sales are final: no returns, refunds or exchanges. By
+                placing your order you accept our{" "}
+                <a href="/terms" className="link" target="_blank">terms of sale</a>{" "}
+                and{" "}
+                <a href="/privacy" className="link" target="_blank">privacy policy</a>.
+                {cart.payment_collection?.payment_sessions?.some((s) => s.provider_id === "pp_system_default") && (
+                  <> After you place it, we&apos;ll show you how to send your Interac e-Transfer.</>
+                )}
               </Text>
             </div>
           </div>

@@ -1,5 +1,7 @@
 "use client"
 
+import ProvinceSelect from "@modules/garb/forms/province-select"
+
 import { Plus } from "@medusajs/icons"
 import { Button, Heading } from "@modules/common/components/ui"
 import { useActionState, useEffect, useState } from "react"
@@ -47,7 +49,7 @@ const AddAddress = ({
   return (
     <>
       <button
-        className="border border-ui-border-base rounded-rounded p-5 min-h-[220px] h-full w-full flex flex-col justify-between"
+        className="border border-ui-border-base rounded-[14px] p-5 min-h-[220px] h-full w-full flex flex-col justify-between"
         onClick={open}
         data-testid="add-address-button"
       >
@@ -113,8 +115,8 @@ const AddAddress = ({
                   data-testid="city-input"
                 />
               </div>
-              <Input
-                label="Province / State"
+              <ProvinceSelect
+                required
                 name="province"
                 autoComplete="address-level1"
                 data-testid="state-input"

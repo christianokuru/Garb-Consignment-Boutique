@@ -46,9 +46,9 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
               <label
                 htmlFor={id}
                 className={clx(
-                  "flex items-center justify-center cursor-pointer border-ui-border-base bg-ui-bg-subtle border text-small-regular h-10 rounded-rounded p-2 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-1 peer-disabled:cursor-not-allowed",
+                  "flex items-center justify-center cursor-pointer border-ui-border-base bg-ui-bg-subtle border text-small-regular h-10 rounded-[14px] p-2 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-1 peer-disabled:cursor-not-allowed",
                   {
-                    "border-ui-border-interactive": v === current,
+                    "!border-ink": v === current,
                     "hover:shadow-elevation-card-rest transition-shadow ease-in-out duration-150":
                       v !== current,
                   }

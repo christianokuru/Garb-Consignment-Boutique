@@ -1,3 +1,4 @@
+import ProvinceSelect from "@modules/garb/forms/province-select"
 import { HttpTypes } from "@medusajs/types"
 import Input from "@modules/common/components/input"
 import React, { useState } from "react"
@@ -90,8 +91,8 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
           required
           data-testid="billing-country-select"
         />
-        <Input
-          label="State / Province"
+        <ProvinceSelect
+          required
           name="billing_address.province"
           autoComplete="address-level1"
           value={formData["billing_address.province"]}

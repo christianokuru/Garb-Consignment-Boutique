@@ -42,10 +42,10 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
       <Component
         ref={ref}
         className={clsx(
-          "font-semibold",
-          Component === "h1" && "text-3xl",
-          Component === "h2" && "text-2xl",
-          Component === "h3" && "text-xl",
+          "font-serif font-light tracking-[-0.03em] text-ink",
+          Component === "h1" && "text-[40px] leading-[1.05] sm:text-[48px]",
+          Component === "h2" && "text-[30px] leading-[1.1]",
+          Component === "h3" && "font-sans text-body font-medium tracking-normal",
           className
         )}
         {...props}
@@ -82,11 +82,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={clsx(
-          "inline-flex gap-2 items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-          variant === "primary" && "bg-black text-white hover:bg-gray-800",
-          variant === "secondary" &&
-            "bg-white text-black border border-gray-200 hover:bg-gray-50",
-          variant === "transparent" && "bg-transparent hover:bg-gray-100",
+          "inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-[60px] text-label font-medium transition-colors disabled:pointer-events-none disabled:opacity-40",
+          variant === "primary" && "bg-ink text-white hover:bg-[#262626]",
+          variant === "secondary" && "bg-paper text-ink hover:bg-[#ececec]",
+          variant === "transparent" && "bg-transparent text-ink underline-offset-4 hover:underline",
           size === "small" && "h-8 px-3 text-sm",
           size === "medium" && "h-10 px-4",
           size === "large" && "h-12 px-6 text-lg",
@@ -109,7 +108,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
     return (
       <div
         ref={ref}
-        className={clsx("bg-white rounded-lg p-4", className)}
+        className={clsx("bg-paper rounded-utility p-4", className)}
         {...props}
       >
         {children}
@@ -130,12 +129,12 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={clsx(
-          "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
-          color === "green" && "bg-green-100 text-green-700",
-          color === "red" && "bg-red-100 text-red-700",
-          color === "blue" && "bg-blue-100 text-blue-700",
-          color === "orange" && "bg-orange-100 text-orange-700",
-          color === "grey" && "bg-gray-100 text-gray-700",
+          "inline-flex items-center rounded-pill px-2.5 py-1 text-micro",
+          color === "green" && "bg-paper text-ink",
+          color === "red" && "bg-[#fbeae5] text-alert",
+          color === "blue" && "bg-paper text-ink",
+          color === "orange" && "bg-paper text-ink",
+          color === "grey" && "bg-paper text-ink",
           color === "purple" && "bg-purple-100 text-purple-700",
           className
         )}
@@ -178,7 +177,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          "inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2",
+          "inline-flex items-center justify-center rounded-pill p-2 hover:bg-paper transition-colors",
           className
         )}
         {...props}
@@ -198,7 +197,7 @@ export const Label = forwardRef<HTMLLabelElement, LabelProps>(
     return (
       <label
         ref={ref}
-        className={clsx("text-sm font-medium", className)}
+        className={clsx("text-label font-medium", className)}
         {...props}
       >
         {children}
@@ -221,7 +220,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={clsx(
-            "flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+            "field disabled:cursor-not-allowed disabled:opacity-50",
             className
           )}
           {...props}
@@ -292,7 +291,7 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
       <tr
         ref={ref}
         className={clsx(
-          "border-b transition-colors hover:bg-gray-50",
+          "border-b border-line",
           className
         )}
         {...props}
@@ -312,7 +311,7 @@ const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
       <th
         ref={ref}
         className={clsx(
-          "h-12 px-4 text-left align-middle font-medium text-gray-500 [&:has([role=checkbox])]:pr-0",
+          "h-12 px-0 pr-4 text-left align-middle text-label font-normal text-quiet [&:has([role=checkbox])]:pr-0",
           className
         )}
         {...props}
@@ -332,7 +331,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
       <td
         ref={ref}
         className={clsx(
-          "p-4 align-middle [&:has([role=checkbox])]:pr-0",
+          "py-4 pr-4 align-middle [&:has([role=checkbox])]:pr-0",
           className
         )}
         {...props}
