@@ -6,6 +6,8 @@
     "node": ">=22.23.4"
   },
   "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "demo": "node scripts/demo.mjs",
     "dev": "turbo dev",
     "build": "turbo build",
     "start": "turbo start",

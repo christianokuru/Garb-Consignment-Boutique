@@ -15,10 +15,32 @@ const BACKEND_HOST = backendUrl?.hostname
 const BACKEND_PROTOCOL = backendUrl?.protocol.replace(":", "")
 
 /**
+ * Public share links (for demos) that may open the shop and submit its forms.
+ * Next.js rejects form submissions and dev assets coming from a web address it
+ * doesn't know. Add your own, comma separated, in ALLOWED_ORIGINS.
+ */
+const SHARE_LINK_HOSTS = [
+  "*.trycloudflare.com",
+  "*.ngrok-free.app",
+  "*.ngrok.app",
+  "*.loca.lt",
+  ...(process.env.ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((host) => host.trim().replace(/^https?:\/\//, "").replace(/\/.*$/, ""))
+    .filter(Boolean),
+]
+
+/**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
   reactStrictMode: true,
+  allowedDevOrigins: SHARE_LINK_HOSTS,
+  experimental: {
+    serverActions: {
+      allowedOrigins: SHARE_LINK_HOSTS,
+    },
+  },
   async headers() {
     return [
       {

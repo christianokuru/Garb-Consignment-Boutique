@@ -17,55 +17,44 @@ It's a Turborepo workspace using npm.
 
 ## Run it locally
 
-You need Node 22 or later, PostgreSQL 15 or later, and (recommended) Redis.
+You need **Node 22** or later and **PostgreSQL 15** or later running on your computer. Redis is optional.
 
-1. Install dependencies from the repo root:
+```bash
+npm install
+npm run setup
+npm run dev
+```
 
-   ```bash
-   npm install
-   ```
+`npm run setup` asks a few questions (press Enter to accept each default), then:
 
-2. Create the database and backend env file:
+- creates `apps/backend/.env` and `apps/storefront/.env.local` with fresh secret keys,
+- creates the database if it doesn't exist,
+- builds the tables and loads the demo shop (164 real pieces, designers, sellers, payouts),
+- creates an admin login (default `admin@garb.test` / `garbadmin1`),
+- connects the shop to the backend.
 
-   ```bash
-   createdb garb
-   cp apps/backend/.env.template apps/backend/.env
-   ```
+It's safe to run again. Use `npm run setup -- --yes` to skip the questions.
 
-   Then edit `DATABASE_URL`, and set a long random `JWT_SECRET`, `COOKIE_SECRET`, `AUTH_MFA_ENCRYPTION_KEY` and `REVALIDATE_SECRET`.
+After that, `npm run dev` is all you need each time.
 
-3. Run migrations. On an empty database this also loads the Garb store setup and a demo catalogue of 164 real pieces:
+- Shop: http://localhost:8000
+- Admin: http://localhost:9000/app
+- Demo seller: `seller@garb.test` / `garbseller1` at http://localhost:8000/seller
 
-   ```bash
-   cd apps/backend && npx medusa db:migrate
-   ```
+## Show it to someone (free share link)
 
-   Copy the publishable key printed at the end (`[garb] Done. Publishable key: pk_...`).
+```bash
+npm run demo
+```
 
-4. Create an admin login:
+This runs the fast (production) version of the shop and prints a public link like `https://something.trycloudflare.com` that anyone can open on their phone or computer. Checkout, booking and seller login all work through it.
 
-   ```bash
-   cd apps/backend && npx medusa user -e you@garb.ca -p a-strong-password
-   ```
+- It needs Cloudflare's free tunnel tool, installed once: `brew install cloudflared` (Mac) or `winget install --id Cloudflare.cloudflared` (Windows). No account needed.
+- The link works only while your computer is on and `npm run demo` is running, and it changes each time.
+- Show the admin on your own screen (http://localhost:9000/app). It isn't shared.
+- Press Ctrl+C to stop. Use `npm run demo -- --no-tunnel` to run without a link.
 
-5. Set up the storefront env:
-
-   ```bash
-   cp apps/storefront/.env.template apps/storefront/.env.local
-   ```
-
-   Paste the publishable key into `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`, and use the same `REVALIDATE_SECRET` as the backend.
-
-6. Start both apps from the repo root:
-
-   ```bash
-   npm run dev
-   ```
-
-   - Shop: http://localhost:8000
-   - Admin: http://localhost:9000/app
-
-**Demo seller login** (from the seed): `seller@garb.test` / `garbseller1` at http://localhost:8000/seller
+Using a different tunnel (ngrok, etc.)? ngrok links work already. For any other address, add it to `ALLOWED_ORIGINS` in `apps/storefront/.env.local` (for example `ALLOWED_ORIGINS=demo.example.com`), or the shop's forms will be refused.
 
 ## What the seed sets up
 
@@ -134,7 +123,9 @@ Emails (order confirmation with e-Transfer instructions, payment received, unpai
 ## Useful commands
 
 ```bash
+npm run setup                                 # first-time setup
 npm run dev                                   # both apps
+npm run demo                                  # fast version + share link
 npm run build                                 # production build
 cd apps/backend && npx medusa lint            # backend checks
 cd apps/storefront && npx tsc --noEmit        # storefront type check
