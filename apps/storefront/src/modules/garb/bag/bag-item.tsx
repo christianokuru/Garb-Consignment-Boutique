@@ -6,6 +6,7 @@ import { HttpTypes } from "@medusajs/types"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useTransition } from "react"
+import { notifyBagChanged } from "@modules/layout/components/garb/bag-button"
 
 export default function BagItem({
   item,
@@ -22,7 +23,7 @@ export default function BagItem({
   const code = item.variant_sku?.replace(/^GARB-/, "") ?? meta.item_code
   const size = item.variant_title && item.variant_title !== "Default variant" ? item.variant_title : meta.size
   const unit = Number(item.unit_price ?? 0)
-  const total = Number(item.total ?? item.subtotal ?? unit)
+  const total = Number(item.subtotal ?? unit * (item.quantity ?? 1))
   const original = Number((item as any).compare_at_unit_price ?? 0)
 
   return (
@@ -56,6 +57,7 @@ export default function BagItem({
                   setError(null)
                   try {
                     await deleteLineItem(item.id)
+                    notifyBagChanged()
                   } catch (e) {
                     setError((e as Error).message)
                   }

@@ -27,6 +27,9 @@ export default function BookingForm() {
   const [state, action] = useActionState(requestAppointment, null)
   const [type, setType] = useState<"in_store" | "in_house">("in_store")
   const fe = state?.fieldErrors ?? {}
+  // React resets the form after each submit; defaults keep what was typed.
+  const v = (k: string) => (state?.values?.[k] as string | undefined) ?? undefined
+  const picked = (state?.values?.categories as string[] | undefined) ?? []
   const today = new Date().toISOString().slice(0, 10)
 
   if (state?.ok) {
@@ -45,6 +48,7 @@ export default function BookingForm() {
   const input = (name: string) => ({
     name,
     id: name,
+    defaultValue: v(name),
     "aria-invalid": fe[name] ? true : undefined,
     "aria-describedby": fe[name] ? `${name}-error` : undefined,
     className: "field",
@@ -88,7 +92,7 @@ export default function BookingForm() {
         </div>
         <div>
           <label htmlFor="item_count" className="field-label">How many pieces?</label>
-          <input {...input("item_count")} type="number" min={1} max={500} inputMode="numeric" defaultValue={type === "in_house" ? 25 : undefined} required />
+          <input {...input("item_count")} type="number" min={1} max={500} inputMode="numeric" required />
           <Err msg={fe.item_count} id="item_count-error" />
         </div>
         <div>
@@ -102,7 +106,7 @@ export default function BookingForm() {
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((c) => (
             <label key={c} className="cursor-pointer">
-              <input type="checkbox" name="categories" value={c} className="peer sr-only" />
+              <input type="checkbox" name="categories" value={c} defaultChecked={picked.includes(c)} className="peer sr-only" />
               <span className="pill peer-checked:bg-ink peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-ink">{c}</span>
             </label>
           ))}
@@ -117,13 +121,13 @@ export default function BookingForm() {
         </div>
         <div>
           <label htmlFor="preferred_time" className="field-label">Preferred time</label>
-          <select {...input("preferred_time")} defaultValue="Any time">
+          <select {...input("preferred_time")} defaultValue={v("preferred_time") ?? "Any time"}>
             {TIMES.map((t) => <option key={t}>{t}</option>)}
           </select>
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="notes" className="field-label">Anything else? <span className="font-normal text-quiet">(optional)</span></label>
-          <textarea name="notes" id="notes" rows={4} className="field" placeholder="Special pieces, sizes, condition, or your address for an in-home visit." />
+          <textarea name="notes" id="notes" rows={4} defaultValue={v("notes")} className="field" placeholder="Special pieces, sizes, condition, or your address for an in-home visit." />
         </div>
       </div>
 

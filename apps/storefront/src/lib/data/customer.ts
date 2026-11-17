@@ -20,7 +20,7 @@ import {
 } from "./cookies"
 
 export type CustomerAuthState =
-  | { state: "error"; error: string }
+  | { state: "error"; error: string; email?: string }
   | { state: "verification_required"; email: string }
   | { state: "success" }
   | null
@@ -131,7 +131,16 @@ export async function login(
   const email = formData.get("email") as string
   const password = formData.get("password") as string
 
-  return completeLogin(email, password)
+  const result = await completeLogin(email, password)
+  if (result?.state === "error") {
+    const invalid = /invalid|unauthorized|not found/i.test(result.error)
+    return {
+      ...result,
+      email,
+      error: invalid ? "That email and password don't match an account." : result.error.replace(/^Error:\s*/, ""),
+    }
+  }
+  return result
 }
 
 // Logs the customer in and reconciles the customer record. The behavior is

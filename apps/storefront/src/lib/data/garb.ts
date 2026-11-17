@@ -193,7 +193,12 @@ export async function getProductByHandle(handle: string): Promise<GarbProduct | 
   }
 }
 
-export type AppointmentState = { ok?: boolean; error?: string; fieldErrors?: Record<string, string> } | null
+export type AppointmentState = {
+  ok?: boolean
+  error?: string
+  fieldErrors?: Record<string, string>
+  values?: Record<string, string | string[]>
+} | null
 
 export async function requestAppointment(_state: AppointmentState, formData: FormData): Promise<AppointmentState> {
   const get = (k: string) => String(formData.get(k) ?? "").trim()
@@ -208,7 +213,19 @@ export async function requestAppointment(_state: AppointmentState, formData: For
   if (phone.replace(/\D/g, "").length < 7) fieldErrors.phone = "Please enter a phone number we can reach you at."
   if (!Number.isFinite(itemCount) || itemCount < 1) fieldErrors.item_count = "Roughly how many pieces?"
   if (type === "in_house" && itemCount < 25) fieldErrors.item_count = "In-home visits are for 25 pieces or more."
-  if (Object.keys(fieldErrors).length) return { fieldErrors }
+  const values = {
+    name,
+    email,
+    phone,
+    item_count: get("item_count"),
+    appointment_type: type,
+    brands: get("brands"),
+    preferred_date: get("preferred_date"),
+    preferred_time: get("preferred_time"),
+    notes: get("notes"),
+    categories: formData.getAll("categories").map(String),
+  }
+  if (Object.keys(fieldErrors).length) return { fieldErrors, values }
 
   try {
     await sdk.client.fetch("/store/appointments", {
@@ -229,6 +246,6 @@ export async function requestAppointment(_state: AppointmentState, formData: For
     })
     return { ok: true }
   } catch (e) {
-    return { error: "We couldn't send your request. Please try again, or call us." }
+    return { error: "We couldn't send your request. Please try again, or call us.", values }
   }
 }

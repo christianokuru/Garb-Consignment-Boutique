@@ -36,3 +36,6 @@ export default async function TransferPage({
     </div>
   )
 }
+
+// Reads the visitor’s cookies (cart, sign-in).
+export const dynamic = "force-dynamic"

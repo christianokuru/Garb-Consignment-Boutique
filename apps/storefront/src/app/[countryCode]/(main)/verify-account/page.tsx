@@ -23,3 +23,6 @@ export default function VerifyAccountPage() {
     </div>
   )
 }
+
+// Reads the visitor’s cookies (cart, sign-in).
+export const dynamic = "force-dynamic"

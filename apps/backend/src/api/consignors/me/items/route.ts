@@ -11,7 +11,7 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse) 
     fields: ["*", "product.id", "product.handle", "product.status", "product.thumbnail", "product.variants.sku"],
     filters: {
       consignor_id: req.auth_context.actor_id,
-      ...(status ? { status: status.split(",") } : {}),
+      ...(status ? { status: status.split(",") as any } : {}),
     },
   })
   const items = (data as any[])

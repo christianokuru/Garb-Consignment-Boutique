@@ -1,10 +1,11 @@
 "use client"
 
 import { departments, slugify, STORE } from "@lib/garb"
-import { ChevronDown, CloseIcon, MenuIcon } from "@modules/common/components/garb-icons"
+import { ChevronDown, CloseIcon, MenuIcon, SearchIcon } from "@modules/common/components/garb-icons"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import OpenStatus from "./open-status"
 
 export default function MobileMenu() {
@@ -33,7 +34,7 @@ export default function MobileMenu() {
       >
         Menu <MenuIcon />
       </button>
-      {open && (
+      {open && createPortal(
         <div id="mobile-menu" className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-white" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="flex items-center justify-between px-4 py-4">
             <OpenStatus />
@@ -41,6 +42,12 @@ export default function MobileMenu() {
               <CloseIcon />
             </button>
           </div>
+          <form action="/search" role="search" className="mx-4 mb-2 flex items-center gap-2 rounded-pill bg-paper p-1.5 pl-4">
+            <SearchIcon className="shrink-0" />
+            <label htmlFor="mobile-search" className="sr-only">Search</label>
+            <input id="mobile-search" name="q" type="search" placeholder="Designer, piece or item code" enterKeyHint="search" className="w-full bg-transparent text-body outline-none placeholder:text-quiet" />
+            <button type="submit" className="btn btn-primary btn-sm">Go</button>
+          </form>
           <nav className="flex-1 px-4 pb-10 pt-2" aria-label="Main">
             <ul className="divide-y divide-line">
               {(Object.keys(departments) as (keyof typeof departments)[]).map((d) => (
@@ -85,7 +92,8 @@ export default function MobileMenu() {
               <p><a href={STORE.phoneHref} className="link">{STORE.phone}</a> · <a href={`mailto:${STORE.email}`} className="link">{STORE.email}</a></p>
             </div>
           </nav>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )

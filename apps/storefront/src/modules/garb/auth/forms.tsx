@@ -55,7 +55,7 @@ export function ForgotPasswordForm({ actor, loginHref }: { actor: "customer" | "
   }
   return (
     <form action={action} className="space-y-5">
-      <Field label="Email" name="email" type="email" autoComplete="email" required />
+      <Field label="Email" name="email" type="email" autoComplete="email" defaultValue={state?.email} required />
       <ErrorText state={state} />
       <Submit>Send reset link</Submit>
       <p className="text-label"><Link href={loginHref} className="link">Back to sign in</Link></p>
@@ -100,7 +100,7 @@ export function SellerLoginForm() {
   const [state, action] = useActionState(sellerLogin, null)
   return (
     <form action={action} className="space-y-5" data-testid="seller-login-form">
-      <Field label="Email" name="email" type="email" autoComplete="email" required />
+      <Field label="Email" name="email" type="email" autoComplete="email" defaultValue={state?.email} required />
       <Field label="Password" name="password" type="password" autoComplete="current-password" required />
       <ErrorText state={state} />
       <Submit>Sign in</Submit>

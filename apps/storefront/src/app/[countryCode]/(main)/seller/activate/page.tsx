@@ -15,7 +15,7 @@ export default async function ActivatePage({ searchParams }: Props) {
 
   if (!token || !invite) {
     return (
-      <AuthShell title={<>This invite has <em>expired</em></>} intro={<>Invite links last 14 days. Call us at <a href={STORE.phoneHref} className="link">{STORE.phone}</a> or email <a href={`mailto:${STORE.email}`} className="link">{STORE.email}</a> and we&apos;ll send a new one.</>}>
+      <AuthShell title={<>This link is no longer <em>active</em></>} intro={<>Invite links last 14 days and work once. Already activated? <Link href="/seller" className="link">Sign in here</Link>. Otherwise Call us at <a href={STORE.phoneHref} className="link">{STORE.phone}</a> or email <a href={`mailto:${STORE.email}`} className="link">{STORE.email}</a> and we&apos;ll send a new one.</>}>
         <Link href="/seller" className="btn btn-secondary">Go to seller sign in</Link>
       </AuthShell>
     )

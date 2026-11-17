@@ -59,9 +59,10 @@ const nextConfig = {
     deviceSizes: [360, 480, 640, 828, 1080, 1280, 1600, 1920],
     imageSizes: [64, 128, 200, 256, 320, 400],
     minimumCacheTTL: 60 * 60 * 24 * 30,
-    // Next 16 blocks optimising images from private IPs; allow it only when the
-    // backend runs on this machine during development.
-    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
+    // Next 16 refuses to optimise images served from private IPs. Allow it only
+    // when the Medusa backend itself runs on this machine (local development or
+    // a local production test); deployed backends have a public hostname.
+    dangerouslyAllowLocalIP: ["localhost", "127.0.0.1"].includes(BACKEND_HOST ?? ""),
     remotePatterns: [
       {
         protocol: "http",

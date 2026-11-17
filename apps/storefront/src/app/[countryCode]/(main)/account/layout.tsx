@@ -18,3 +18,6 @@ export default async function AccountPageLayout({
     </AccountLayout>
   )
 }
+
+// Reads the visitor’s cookies (cart, sign-in).
+export const dynamic = "force-dynamic"

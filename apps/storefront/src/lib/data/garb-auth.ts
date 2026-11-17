@@ -5,7 +5,7 @@ import { cookies as nextCookies } from "next/headers"
 import { redirect } from "next/navigation"
 
 type Actor = "customer" | "consignor"
-export type FormState = { ok?: boolean; error?: string } | null
+export type FormState = { ok?: boolean; error?: string; email?: string } | null
 
 const SELLER_COOKIE = "_garb_seller_jwt"
 const BACKEND = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
@@ -19,7 +19,7 @@ function message(e: unknown, fallback = "Something went wrong. Please try again.
 
 export async function requestPasswordReset(actor: Actor, _state: FormState, formData: FormData): Promise<FormState> {
   const email = String(formData.get("email") ?? "").trim()
-  if (!email) return { error: "Enter your email address." }
+  if (!email) return { error: "Enter your email address.", email }
   try {
     await sdk.auth.resetPassword(actor, "emailpass", { identifier: email })
   } catch {
@@ -92,7 +92,7 @@ export async function sellerLogin(_state: FormState, formData: FormData): Promis
     const { token } = await authPost("/auth/consignor/emailpass", { email, password })
     await setSellerToken(token)
   } catch {
-    return { error: "That email and password don't match a seller account." }
+    return { error: "That email and password don't match a seller account.", email }
   }
   redirect("/seller")
 }

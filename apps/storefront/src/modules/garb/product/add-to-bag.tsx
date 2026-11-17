@@ -3,14 +3,13 @@
 import { addToCart } from "@lib/data/cart"
 import { CheckIcon } from "@modules/common/components/garb-icons"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { notifyBagChanged } from "@modules/layout/components/garb/bag-button"
 import { useState, useTransition } from "react"
 
 export default function AddToBag({ variantId, available, title }: { variantId?: string; available: boolean; title: string }) {
   const [state, setState] = useState<"idle" | "added" | "error">("idle")
   const [message, setMessage] = useState("")
   const [pending, start] = useTransition()
-  const router = useRouter()
 
   if (!available || !variantId) {
     return (
@@ -26,7 +25,7 @@ export default function AddToBag({ variantId, available, title }: { variantId?: 
       try {
         await addToCart({ variantId, quantity: 1, countryCode: "ca" })
         setState("added")
-        router.refresh()
+        notifyBagChanged()
       } catch (e) {
         const msg = (e as Error).message || ""
         setState("error")

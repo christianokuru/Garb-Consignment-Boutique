@@ -19,3 +19,6 @@ export default async function Cart() {
 
   return <CartTemplate cart={cart} customer={customer} />
 }
+
+// Reads the visitor’s cookies (cart, sign-in).
+export const dynamic = "force-dynamic"

@@ -21,3 +21,6 @@ export default async function OrderConfirmedPage(props: Props) {
 
   return <OrderCompletedTemplate order={order} />
 }
+
+// Reads the visitor’s cookies (cart, sign-in).
+export const dynamic = "force-dynamic"

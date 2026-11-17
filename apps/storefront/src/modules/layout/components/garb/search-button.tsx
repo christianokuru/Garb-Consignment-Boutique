@@ -3,6 +3,7 @@
 import { CloseIcon, SearchIcon } from "@modules/common/components/garb-icons"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 
 export default function SearchButton() {
   const [open, setOpen] = useState(false)
@@ -29,7 +30,7 @@ export default function SearchButton() {
       >
         <SearchIcon />
       </button>
-      {open && (
+      {open && createPortal(
         <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Search the shop">
           <button className="absolute inset-0 bg-black/20" aria-label="Close search" onClick={() => setOpen(false)} />
           <form
@@ -74,7 +75,8 @@ export default function SearchButton() {
               ))}
             </div>
           </form>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )

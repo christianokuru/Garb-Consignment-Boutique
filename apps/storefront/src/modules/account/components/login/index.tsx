@@ -38,6 +38,7 @@ const Login = ({ setCurrentView }: Props) => {
             type="email"
             title="Enter a valid email address."
             autoComplete="email"
+            defaultValue={message?.state === "error" ? message.email : undefined}
             required
             data-testid="email-input"
           />

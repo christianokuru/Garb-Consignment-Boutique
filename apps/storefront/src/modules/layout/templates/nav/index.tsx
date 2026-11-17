@@ -1,31 +1,11 @@
-import { retrieveCart } from "@lib/data/cart"
 import { departments, slugify } from "@lib/garb"
 import { UserIcon } from "@modules/common/components/garb-icons"
 import Link from "next/link"
-import { Suspense } from "react"
+import BagButton from "../../components/garb/bag-button"
 import MobileMenu from "../../components/garb/mobile-menu"
 import OpenStatus from "../../components/garb/open-status"
 import SearchButton from "../../components/garb/search-button"
 import Wordmark from "../../components/garb/wordmark"
-
-async function BagCount() {
-  const cart = await retrieveCart().catch(() => null)
-  const count = cart?.items?.reduce((n, i) => n + i.quantity, 0) ?? 0
-  return <>{count}</>
-}
-
-function BagButton() {
-  return (
-    <Link href="/cart" className="btn btn-primary btn-sm" data-testid="nav-cart-link">
-      Bag
-      <span className="tabular-nums" aria-label="items">
-        <Suspense fallback="0">
-          <BagCount />
-        </Suspense>
-      </span>
-    </Link>
-  )
-}
 
 function DepartmentMenu({ department }: { department: keyof typeof departments }) {
   const d = departments[department]

@@ -22,7 +22,7 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse) 
       "product.variants.sku",
     ],
     filters: {
-      ...(status ? { status: status.split(",") } : {}),
+      ...(status ? { status: status.split(",") as any } : {}),
       ...(consignorId ? { consignor_id: consignorId } : {}),
     },
   })
